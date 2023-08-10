@@ -1,0 +1,52 @@
+import java.util.Random;
+import java.util.Scanner;
+
+public class NumberGuessingGame {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        Random random = new Random();
+        
+        int lowerBound = 1;
+        int upperBound = 100;
+        int maxAttempts = 10;
+        int score = 0;
+        
+        boolean playAgain = true;
+        
+        while (playAgain) {
+            int generatedNumber = random.nextInt(upperBound - lowerBound + 1) + lowerBound;
+            int attempts = 0;
+            
+            System.out.println("Welcome to the Number Guessing Game!");
+            System.out.println("I've generated a number between " + lowerBound + " and " + upperBound + ".");
+            
+            while (attempts < maxAttempts) {
+                System.out.print("Enter your guess: ");
+                int userGuess = scanner.nextInt();
+                attempts++;
+                
+                if (userGuess < generatedNumber) {
+                    System.out.println("Your guess is too low.");
+                } else if (userGuess > generatedNumber) {
+                    System.out.println("Your guess is too high.");
+                } else {
+                    System.out.println("Congratsss! You guessed the correct number " + generatedNumber + " in " + attempts + " attempts.");
+                    score++;
+                    break;
+                }
+                
+                if (attempts == maxAttempts) {
+                    System.out.println("Sorry, you've reached the maximum number of attempts. The correct number was " + generatedNumber + ".");
+                } else {
+                    System.out.println("You have " + (maxAttempts - attempts) + " attempts remaining.");
+                }
+            }
+            
+            System.out.print("Do you want to play again? (yes/no): ");
+            String playAgainResponse = scanner.next();
+            playAgain = playAgainResponse.equalsIgnoreCase("yes");
+        }
+        
+        System.out.println("Game over. Your total score: " + score);
+    }
+}
