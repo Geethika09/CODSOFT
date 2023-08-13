@@ -1,0 +1,61 @@
+import java.io.*;
+import java.util.*;
+
+public class WordCount {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        
+        System.out.print("Enter 'text' to input text or 'file' to provide a file path: ");
+        String inputType = scanner.nextLine();
+        
+        String text = "";
+        if (inputType.equalsIgnoreCase("text")) {
+            System.out.print("Enter your text: ");
+            text = scanner.nextLine();
+        } else if (inputType.equalsIgnoreCase("file")) {
+            System.out.print("Enter the file path: ");
+            String filePath = scanner.nextLine();
+            text = readTextFromFile(filePath);
+        } else {
+            System.out.println("Invalid input type. Exiting.");
+            return;
+        }
+        
+        String[] words = text.split("[\\s\\p{Punct}]+");
+        int totalWordCount = words.length;
+        
+        System.out.println("Total word count: " + totalWordCount);
+        
+        // Suggested enhancement: Count unique words and their frequencies
+        Map<String, Integer> wordFrequency = new HashMap<>();
+        for (String word : words) {
+            wordFrequency.put(word, wordFrequency.getOrDefault(word, 0) + 1);
+        }
+        
+        System.out.println("Unique word count: " + wordFrequency.size());
+        
+       
+        Set<String> stopWords = new HashSet<>(Arrays.asList("the", "and", "in", "of", "a", "to", "is", "it"));
+        wordFrequency.entrySet().removeIf(entry -> stopWords.contains(entry.getKey().toLowerCase()));
+        
+        System.out.println("Unique word count (excluding stop words): " + wordFrequency.size());
+        
+        System.out.println("Word frequency:");
+        for (Map.Entry<String, Integer> entry : wordFrequency.entrySet()) {
+            System.out.println(entry.getKey() + ": " + entry.getValue());
+        }
+    }
+    
+    private static String readTextFromFile(String filePath) {
+        StringBuilder text = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                text.append(line).append(" ");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return text.toString();
+    }
+}
